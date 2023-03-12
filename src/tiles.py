@@ -5,7 +5,7 @@ from typing import Tuple
 class TileSet:
     def __init__(self, grid_size: Tuple[int, int], tile_size: int = 1, _empty: bool = True) -> None:
         self.size, self.grid = tile_size, grid_size
-        self.items = {Tile(x, y) for x in range(grid_size[0]) for y in range(grid_size[1])}
+        self.items = {(x, y): Tile(x, y) for x in range(grid_size[0]) for y in range(grid_size[1])}
         self.walls = set()
         self.start, self.end = None, None
         if not _empty:
@@ -17,18 +17,18 @@ class TileSet:
         self.size = tile_size
 
     def generate_walls(self, density: float):
-        set_ = set(self.items)
-        for elt in set_:
+        dict_ = dict(self.items)
+        for key, elt in dict_.items():
             if random() < density:
-                self.items.remove(elt)
+                self.items.pop(key)
                 self.walls.add(elt)
 
     def random_start(self):
-        elt = choice(tuple(self.items))
+        elt = choice(tuple(self.items.values()))
         self.start = elt
 
     def random_end(self):
-        elt = choice(tuple(self.items))
+        elt = choice(tuple(self.items.values()))
         self.end = elt
 
 
